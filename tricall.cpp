@@ -90,10 +90,6 @@ REAL GetSlope(REAL ax,REAL ay,REAL ex,REAL ey)
 	return (ax-ex)/(ay-ey);
 
 }
-int IsStable(REAL ax,REAL ay,REAL ex,REAL ey)
-{
-	if(GetDistance(ax,ay,ex,ey)==GetSlope(ax,ay,ex,ey))return 1;
-	else 0 ;
-}
+
 
 */
