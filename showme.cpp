@@ -58,7 +58,7 @@ int DrawGLLine(GLdouble hx,GLdouble hy,GLdouble ex,GLdouble ey)
 }
 int DrawGLTriangle(GLdouble hx,GLdouble hy,GLdouble mx,GLdouble my,GLdouble ex,GLdouble ey)
 {
-	glColor3f(1.0f,0.0f,0.0f);
+	glColor3f(0.4f,0.0f,0.0f);
 	DrawGLLine(hx,hy,mx,my);
 	DrawGLLine(hx,hy,ex,ey);
 	DrawGLLine(mx,my,ex,ey);
@@ -80,7 +80,6 @@ BOOL GetResult(BubbleList bub)
 	triangulateio mid;
 	triangulateio vorout;
 	initIOV(in,bub,mid,vorout);
-
 	triangulate("pczAevn", &in, &mid, &vorout);	
 
 	if(mid.trianglelist!=NULL)
@@ -107,12 +106,12 @@ BOOL GetResult(BubbleList bub)
 	{
 
 		if(vorout.edgelist[i*2+1]!=-1)
-		{glColor3f(0.0f,1.0f,0.0f); 
+		{glColor3f(0.0f,0.8f,0.0f); 
 		DrawGLLine(vorout.pointlist[2*vorout.edgelist[i*2]],vorout.pointlist[2*vorout.edgelist[i*2]+1],
 			vorout.pointlist[2*vorout.edgelist[i*2+1]],vorout.pointlist[2*vorout.edgelist[i*2+1]+1]);
 		}
 		else{
-			glColor3f(1.0f,1.0f,0.0f);
+			glColor3f(0.0f,0.8f,0.0f);
 		 DrawGLLine(vorout.pointlist[2*vorout.edgelist[i*2]],vorout.pointlist[2*vorout.edgelist[i*2]+1],
 				vorout.pointlist[2*vorout.edgelist[i*2]]+10*vorout.normlist[i*2],vorout.pointlist[2*vorout.edgelist[i*2]+1]+10*vorout.normlist[i*2+1]);
 		}

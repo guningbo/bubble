@@ -24,12 +24,7 @@ void initIOV(triangulateio &in,BubbleList p,triangulateio &mid,triangulateio &vo
 	}
 	in.numberofsegments = 0;
 	in.numberofholes = 0;
-	in.numberofregions = 1;
-	in.regionlist=new REAL[4*in.numberofregions];
-	in.regionlist[0]=0.0;
-	in.regionlist[1]=0.0;
-	in.regionlist[2]=1.0;
-	in.regionlist[3]=1.0;
+	in.numberofregions = 0;
 
 	in.trianglelist=(int *)NULL;
 	         /* Not needed if -E switch used. */
@@ -85,12 +80,11 @@ REAL GetPlateauEqual(REAL ri,REAL rj)
 {
 	return ri+rj;
 }
-//
+
 REAL GetSlope(REAL ax,REAL ay,REAL ex,REAL ey)
 {
 	return (ax-ex)/(ay-ey);
 
 }
-
 
 */

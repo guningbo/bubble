@@ -27,7 +27,7 @@ BUBBlE* BubbleList::GetHead()
 }
 void BubbleList::Getpoint()
 {
-	ifstream in("a.txt");  
+	ifstream in("a.txt"); 
 	BUBBLE *end;
 	end=head;
 	BUBBLE* p=new BUBBLE;
@@ -37,11 +37,8 @@ void BubbleList::Getpoint()
 	{
 		in>>p->num;
 		in>>p->pointX;
-		p->pointX=(p->pointX-0.5)*2;
 		in>>p->pointY;
-		p->pointY=(p->pointY+0.5)*2;
 		in>>p->Attribute;
-		p->Attribute=p->Attribute/8.0;
 		end->next=p;
 		end=p;
 		p=new BUBBLE;
