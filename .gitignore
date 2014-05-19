@@ -1,0 +1,4 @@
+*.txt
+!a.txt
+Debug/
+*.vcxproj*
