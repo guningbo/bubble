@@ -85,6 +85,7 @@ REAL GetPlateauEqual(REAL ri,REAL rj)
 {
 	return ri+rj;
 }
+//
 REAL GetSlope(REAL ax,REAL ay,REAL ex,REAL ey)
 {
 	return (ax-ex)/(ay-ey);
