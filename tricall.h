@@ -5,15 +5,18 @@
 #include "triangle.h"
 #include "bubble.h"
 using namespace std;
+#define SpringK 0.0005
+#define  Pertime 0.2
 #define  REAL double
-void initIOV(triangulateio &in,BubbleList p,triangulateio &mid,triangulateio &vorout);
+void initIn(triangulateio &in,BubbleList p);
+void initOV(triangulateio &mid,triangulateio &vorout);
 
-/*
 REAL GetDistance(REAL ax,REAL ay,REAL ex,REAL ey);
 REAL GetSpring(REAL xi,REAL xj,REAL Lij);
 
 REAL GetPlateauEqual(REAL ri,REAL rj);
 REAL GetSlope(REAL ax,REAL ay,REAL ex,REAL ey);
-int IsStable(REAL ax,REAL ay,REAL ex,REAL ey);
-*/
+int IsStable(REAL ax,REAL ay,REAL ra,REAL ex,REAL ey,REAL re);
+void DynamicBubble(triangulateio &in,triangulateio &mid,REAL *Velocity);
+void AddPoint(int *a,int point);
 #endif
