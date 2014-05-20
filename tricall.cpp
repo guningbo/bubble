@@ -117,7 +117,7 @@ void AddPoint(int *b,int point)
 }
 void DynamicBubble(triangulateio &in,triangulateio &mid,REAL *Velocity)
 {
-	int a[100][50]={0};
+	int a[100][50]={{0}};
 	for(int i=0;i<mid.numberoftriangles;i++)
 	{
 		AddPoint(a[mid.trianglelist[3*i]],mid.trianglelist[3*i+1]);

@@ -20,6 +20,7 @@ void init(void)
 	gluOrtho2D(-1.0,1.0,-1.0,1.0);
 
 }
+
 void DrawGraph(void)
 {
 	glClear(GL_COLOR_BUFFER_BIT);
@@ -38,27 +39,7 @@ void winReshapeFcn(int newWidth,int newHeigh)
 	gluOrtho2D(-1.0,1.0,-1.0,1.0);
 	glClear(GL_COLOR_BUFFER_BIT);
 }
-/*
-int DrawGLLine(GLdouble hx,GLdouble hy,GLdouble ex,GLdouble ey)
-{
-			
-	glBegin(GL_LINES);
-		glVertex2f(hx,hy);
-		glVertex2f(ex,ey);
-		
-	glEnd();
-	return TRUE;
-}
-int DrawGLTriangle(GLdouble hx,GLdouble hy,GLdouble mx,GLdouble my,GLdouble ex,GLdouble ey)
-{
-	glColor3f(0.4f,0.0f,0.0f);
-	DrawGLLine(hx,hy,mx,my);
-	DrawGLLine(hx,hy,ex,ey);
-	DrawGLLine(mx,my,ex,ey);
-		
-	return TRUE;								//  Ò»ÇÐ OK
-}
-*/
+
 void timeCircle(int num)
 {
 	DynamicBubble(in,mid,Velocity);
@@ -67,7 +48,7 @@ void timeCircle(int num)
 	glutPostRedisplay();
 	glutTimerFunc(50,timeCircle,1);
 }
-void DrawGLCircle()
+void DrawGLTCL()
 {	glClear(GL_COLOR_BUFFER_BIT);
 	glColor3f(1.0f,0.0f,1.0f);
 	for(int pi=0;pi<in.numberofpoints;pi++)
@@ -81,6 +62,29 @@ void DrawGLCircle()
 		glVertex2f(hx+R*cos(2*Pi/1000*i), hy+R*sin(2*Pi/1000*i));
 	glEnd();
 	}
+	glColor3f(0.4f,0.0f,0.0f);
+	for(int i=0;i<mid.numberoftriangles;i++)
+	{
+		GLdouble hx, hy, mx, my,ex,ey;
+		hx=mid.pointlist[2*mid.trianglelist[i*3]];hy=mid.pointlist[2*mid.trianglelist[i*3]+1];
+		mx=mid.pointlist[2*mid.trianglelist[i*3+1]];my=mid.pointlist[2*mid.trianglelist[i*3+1]+1];
+		ex=mid.pointlist[2*mid.trianglelist[i*3+2]];ey=mid.pointlist[2*mid.trianglelist[i*3+2]+1];
+		glBegin(GL_LINES);
+		glVertex2f(hx,hy);
+		glVertex2f(ex,ey);
+		glEnd();
+		glBegin(GL_LINES);
+		glVertex2f(mx,my);
+		glVertex2f(ex,ey);
+
+		glEnd();
+		glBegin(GL_LINES);
+		glVertex2f(hx,hy);
+		glVertex2f(mx,my);
+
+		glEnd();
+	;
+	}	
 	glFlush();
 
 }
@@ -98,8 +102,7 @@ void main(int argc,char** argv)
 	initIn(in,bub);
 	initOV(mid,vorout);
 	triangulate("pczAevn", &in, &mid, &vorout);	
-		glutDisplayFunc(DrawGLCircle);
-
+		glutDisplayFunc(DrawGLTCL);
 	glutReshapeFunc(winReshapeFcn);
 	glutTimerFunc(50,timeCircle,0);
 	glutMainLoop();
