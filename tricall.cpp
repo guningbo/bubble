@@ -95,7 +95,7 @@ REAL GetSlope(REAL ax,REAL ay,REAL ex,REAL ey)//ªÒ»°–±Ω«∂»
 
 int IsStable(REAL ax,REAL ay,REAL ra,REAL ex,REAL ey,REAL re)
 {
-	if(GetPlateauEqual(ra,re)==GetDistance(ax,ay,ex,ey))return 1;
+	if((GetDistance(ax,ay,ex,ey)-GetPlateauEqual(ra,re))<0.01&&(GetDistance(ax,ay,ex,ey)-GetPlateauEqual(ra,re))>-0.01)return 1;
 	else return 0;
 }
 
@@ -127,7 +127,7 @@ void DynamicBubble(triangulateio &in,triangulateio &mid,REAL *Velocity)
 		AddPoint(a[mid.trianglelist[3*i+2]],mid.trianglelist[3*i]);
 		AddPoint(a[mid.trianglelist[3*i+2]],mid.trianglelist[3*i+1]);
 	}
-
+	
 	for(int i=0;i<mid.numberofpoints;i++)
 	{	
 		REAL fx=0,fy=0;
@@ -137,16 +137,36 @@ void DynamicBubble(triangulateio &in,triangulateio &mid,REAL *Velocity)
 		ri=mid.pointattributelist[i];
 		for(int j=1;j<=a[i][0];j++)
 		{
-		 REAL xj,yj,rj;
-		 xj=mid.pointlist[2*j];
-		 yj=mid.pointlist[2*j+1];
-		 rj=mid.pointattributelist[j];
-		 REAL Lij=GetPlateauEqual(ri,rj);
-		 fx=fx+GetSpring(xi,xj,Lij);
-		 fy=fy+GetSpring(yi,yj,Lij);
+			REAL xj,yj,rj;
+			 xj=mid.pointlist[2*j];
+			 yj=mid.pointlist[2*j+1];
+			 rj=mid.pointattributelist[j];
+			 REAL Lij=GetPlateauEqual(ri,rj);
+			if(IsStable(xi,yi,ri,xj,yj,rj))
+			{
+				fx=0;
+				fy=0;
+				Velocity[2*i]=0;
+				Velocity[2*i+1]=0;
+				Velocity[2*j]=0;
+				Velocity[2*j+1]=0;
+				break;
+
+			}
+			
+			else{
+			 fx=fx+GetSpring(xi,xj,Lij);
+			 fy=fy+GetSpring(yi,yj,Lij);
+			
+			}
+			if((fx<0.0001&&fx>-0.0001)||(fy<0.0001&&fy>-0.0001)){
+				fx=0;
+				fy=0;
+			}
 		}
+		
 		REAL accX=fx/0.1;
-		REAL accY=fx/0.1;
+		REAL accY=fy/0.1;
 		REAL sx=Velocity[2*i]*Pertime+(1/2.0)*accX*pow(Pertime,2.0);
 		REAL sy=Velocity[2*i+1]*Pertime+(1/2.0)*accY*pow(Pertime,2.0);
 		in.pointlist[2*i]=in.pointlist[2*i]+sx;
