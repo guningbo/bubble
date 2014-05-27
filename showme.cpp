@@ -6,7 +6,7 @@
 #include "tricall.h"
 #include "triangle.c"
 #define  Pi 3.1415926
-
+#define MaxSize 1.0
 
 GLsizei  winWindth=700,winHeigh=700;
 triangulateio in;
@@ -17,7 +17,7 @@ void init(void)
 {
 	glClearColor(0.0,0.0,0.0,1.0);
 	glMatrixMode(GL_PROJECTION);
-	gluOrtho2D(-2.0,2.0,-2.0,2.0);
+	gluOrtho2D(-MaxSize,MaxSize,-MaxSize,MaxSize);
 
 }
 
@@ -36,7 +36,7 @@ void winReshapeFcn(int newWidth,int newHeigh)
 {
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	gluOrtho2D(-2.0,2.0,-2.0,2.0);
+	gluOrtho2D(-MaxSize,MaxSize,-MaxSize,MaxSize);
 	glClear(GL_COLOR_BUFFER_BIT);
 }
 
@@ -82,7 +82,22 @@ void DrawGLTCL()
 		glEnd();
 	
 	}	
-	
+	/*
+	glColor3f(1.0f,1.0f,0.0f);
+	for(int i=0;i<mid.numberofsegments;i++)
+	{
+		REAL hx,hy;
+		REAL ex,ey;
+		hx=mid.pointlist[mid.segmentlist[2*i]];
+		hy=mid.pointlist[mid.segmentlist[2*i]+1];
+		ex=mid.pointlist[mid.segmentlist[2*i+1]];
+		ey=mid.pointlist[mid.segmentlist[2*i+1]+1];
+		glBegin(GL_LINES);
+		glVertex2f(hx,hy);
+		glVertex2f(ex,ey);
+		glEnd();
+	}
+	*/
 	glColor3f(0.0f,0.4f,0.3f);
 	
 	for(int i=0;i<vorout.numberofedges;i++)

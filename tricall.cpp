@@ -95,7 +95,12 @@ REAL GetSlope(REAL ax,REAL ay,REAL ex,REAL ey)//ªÒ»°–±Ω«∂»
 
 int IsStable(REAL ax,REAL ay,REAL ra,REAL ex,REAL ey,REAL re)
 {
-	if((GetDistance(ax,ay,ex,ey)-GetPlateauEqual(ra,re))<0.01&&(GetDistance(ax,ay,ex,ey)-GetPlateauEqual(ra,re))>-0.01)return 1;
+	if((GetDistance(ax,ay,ex,ey)-GetPlateauEqual(ra,re))<0.001/*&&(GetDistance(ax,ay,ex,ey)-GetPlateauEqual(ra,re))>-0.01*/)
+	{ cout<<GetDistance(ax,ay,ex,ey)-GetPlateauEqual(ra,re)<<endl;
+		cout<<GetDistance(ax,ay,ex,ey)<<endl;
+		cout<<GetPlateauEqual(ra,re)<<endl;
+		return 1;
+	}
 	else return 0;
 }
 
@@ -129,40 +134,37 @@ void DynamicBubble(triangulateio &in,triangulateio &mid,REAL *Velocity)
 	}
 	
 	for(int i=0;i<mid.numberofpoints;i++)
-	{	
+	{	int flag=-1;
 		REAL fx=0,fy=0;
 		REAL xi,yi,ri;
 		xi=mid.pointlist[2*i];
 		yi=mid.pointlist[2*i+1];
 		ri=mid.pointattributelist[i];
 		for(int j=1;j<=a[i][0];j++)
+		//for(int j=0;j<mid.numberofpoints;j++)
 		{
+		//	if(j==i)continue;
 			REAL xj,yj,rj;
-			 xj=mid.pointlist[2*j];
-			 yj=mid.pointlist[2*j+1];
-			 rj=mid.pointattributelist[j];
+			 xj=mid.pointlist[2*a[i][j]];
+			 yj=mid.pointlist[2*a[i][j]+1];
+			 rj=mid.pointattributelist[a[i][j]];
 			 REAL Lij=GetPlateauEqual(ri,rj);
 			if(IsStable(xi,yi,ri,xj,yj,rj))
 			{
-				fx=0;
-				fy=0;
-				Velocity[2*i]=0;
-				Velocity[2*i+1]=0;
-				Velocity[2*j]=0;
-				Velocity[2*j+1]=0;
-				break;
-
+				flag=a[i][j];
+			//	Velocity[2*flag]=0;
+			//	Velocity[2*flag+1]=0;
 			}
-			
-			else{
 			 fx=fx+GetSpring(xi,xj,Lij);
-			 fy=fy+GetSpring(yi,yj,Lij);
+			 fy=fy+GetSpring(yi,yj,Lij);			 
+		}
+	if (flag!=-1)
+		{
+			fx=0;
+			fy=0;
+			Velocity[2*i]=0;
+			Velocity[2*i+1]=0;
 			
-			}
-			if((fx<0.0001&&fx>-0.0001)||(fy<0.0001&&fy>-0.0001)){
-				fx=0;
-				fy=0;
-			}
 		}
 		
 		REAL accX=fx/0.1;

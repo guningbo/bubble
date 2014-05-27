@@ -5,8 +5,8 @@
 #include "triangle.h"
 #include "bubble.h"
 using namespace std;
-#define SpringK 0.0005
-#define  Pertime 0.05
+#define SpringK 0.005
+#define  Pertime 0.02
 #define  REAL double
 void initIn(triangulateio &in,BubbleList p);
 void initOV(triangulateio &mid,triangulateio &vorout);
