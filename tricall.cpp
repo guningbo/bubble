@@ -84,6 +84,7 @@ REAL GetSpring(REAL xi,REAL xj,REAL Lij)
 }
 REAL GetPlateauEqual(REAL ri,REAL rj)// 等式
 {
+	//return pow(pow(ri,2.0)+pow(rj,2.0)-ri*rj,1/2.0);
 	return ri+rj;
 }
 
@@ -95,7 +96,10 @@ REAL GetSlope(REAL ax,REAL ay,REAL ex,REAL ey)//获取斜角度
 
 int IsStable(REAL ax,REAL ay,REAL ra,REAL ex,REAL ey,REAL re)
 {
+
 	if((GetDistance(ax,ay,ex,ey)-GetPlateauEqual(ra,re))<0.01/*&&(GetDistance(ax,ay,ex,ey)-GetPlateauEqual(ra,re))>-0.01*/)
+=======
+	if((GetDistance(ax,ay,ex,ey)-GetPlateauEqual(ra,re))<0.001/*&&(GetDistance(ax,ay,ex,ey)-GetPlateauEqual(ra,re))>-0.01*/)
 	{ cout<<GetDistance(ax,ay,ex,ey)-GetPlateauEqual(ra,re)<<endl;
 		cout<<GetDistance(ax,ay,ex,ey)<<endl;
 		cout<<GetPlateauEqual(ra,re)<<endl;
