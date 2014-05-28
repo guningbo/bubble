@@ -6,6 +6,7 @@
 #include "bubble.h"
 using namespace std;
 #define SpringK 0.005
+#define Gravitation 0.05
 #define  Pertime 0.02
 #define  REAL double
 void initIn(triangulateio &in,BubbleList p);

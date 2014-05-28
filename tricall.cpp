@@ -89,8 +89,8 @@ REAL GetPlateauEqual(REAL ri,REAL rj)// 等式
 }
 
 REAL GetSlope(REAL ax,REAL ay,REAL ex,REAL ey)//获取斜角度
-{
-	 return (ax-ex)/(ay-ey);
+{	
+	 return (ay-ey)/(ax-ex);
 
 }
 
@@ -121,6 +121,21 @@ void AddPoint(int *b,int point)
 		b[0]=b[0]+1;
 	}
 }
+REAL GetGravitationX(REAL ax,REAL ay,REAL ex,REAL ey,REAL ma,REAL me)
+{	REAL fx;
+	REAL F=Gravitation*ma*me/(pow((ax-ex),2.0)+pow((ay-ey),2.0));
+	fx=(ex-ax)/GetDistance(ax,ay,ex,ey)*F;	
+	return fx;
+}
+
+REAL GetGravitationY(REAL ax,REAL ay,REAL ex,REAL ey,REAL ma,REAL me)
+{	
+	REAL F=Gravitation*ma*me/(pow((ax-ex),2.0)+pow((ay-ey),2.0));
+	REAL fy=(ey-ay)/GetDistance(ax,ay,ex,ey)*F;
+	
+	return fy;
+
+}
 void DynamicBubble(triangulateio &in,triangulateio &mid,REAL *Velocity)
 {
 	int a[100][50]={{0}};
@@ -142,7 +157,7 @@ void DynamicBubble(triangulateio &in,triangulateio &mid,REAL *Velocity)
 		yi=mid.pointlist[2*i+1];
 		ri=mid.pointattributelist[i];
 		for(int j=1;j<=a[i][0];j++)
-		//for(int j=0;j<mid.numberofpoints;j++)
+	//	for(int j=0;j<mid.numberofpoints;j++)
 		{
 		//	if(j==i)continue;
 			REAL xj,yj,rj;
@@ -153,11 +168,13 @@ void DynamicBubble(triangulateio &in,triangulateio &mid,REAL *Velocity)
 			if(IsStable(xi,yi,ri,xj,yj,rj))
 			{
 				flag=a[i][j];
-				Velocity[2*flag]=0;
-				Velocity[2*flag+1]=0;
+			//	Velocity[2*flag]=0;
+			//	Velocity[2*flag+1]=0;
 			}
-			 fx=fx+GetSpring(xi,xj,Lij);
-			 fy=fy+GetSpring(yi,yj,Lij);			 
+			// fx=fx+GetSpring(xi,xj,Lij);
+			// fy=fy+GetSpring(yi,yj,Lij);	
+			fx+=GetGravitationX(xi,yi,xj,yj,0.1,0.1);
+			fy+=GetGravitationY(xi,yi,xj,yj,0.1,0.1);
 		}
 	if (flag!=-1)
 		{
@@ -176,6 +193,8 @@ void DynamicBubble(triangulateio &in,triangulateio &mid,REAL *Velocity)
 		in.pointlist[2*i+1]=in.pointlist[2*i+1]+sy;
 		Velocity[2*i]=Velocity[2*i]+accX*Pertime;
 		Velocity[2*i+1]=Velocity[2*i+1]+accY*Pertime;
+		
+
 	}
 }
 
