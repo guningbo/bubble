@@ -84,6 +84,7 @@ REAL GetSpring(REAL xi,REAL xj,REAL Lij)
 }
 REAL GetPlateauEqual(REAL ri,REAL rj)// µ» Ω
 {
+	//return pow(pow(ri,2.0)+pow(rj,2.0)-ri*rj,1/2.0);
 	return ri+rj;
 }
 
@@ -152,8 +153,8 @@ void DynamicBubble(triangulateio &in,triangulateio &mid,REAL *Velocity)
 			if(IsStable(xi,yi,ri,xj,yj,rj))
 			{
 				flag=a[i][j];
-			//	Velocity[2*flag]=0;
-			//	Velocity[2*flag+1]=0;
+				Velocity[2*flag]=0;
+				Velocity[2*flag+1]=0;
 			}
 			 fx=fx+GetSpring(xi,xj,Lij);
 			 fy=fy+GetSpring(yi,yj,Lij);			 
