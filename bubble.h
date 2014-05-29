@@ -19,6 +19,7 @@ typedef struct BUBBLE
 class BubbleList
 {
 	BUBBlE *head;
+	BUBBLE *end;
 	
 public:
 	void Bubblelist();
@@ -28,6 +29,8 @@ public:
 	bool UpdateList(REAL x,REAL y);
 	BUBBlE* GetHead();
 	void Getpoint();
+	void getpoint();
+	void AddPoint();
 	
 };
 

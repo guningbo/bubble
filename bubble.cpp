@@ -4,6 +4,7 @@ void BubbleList::Bubblelist()
 {
 	head=new BUBBlE;
 	head->next=NULL;
+	end=head;
 	
 }
 //返回链表长度
@@ -28,8 +29,6 @@ BUBBlE* BubbleList::GetHead()
 void BubbleList::Getpoint()
 {
 	ifstream in("a.txt"); 
-	BUBBLE *end;
-	end=head;
 	BUBBLE* p=new BUBBLE;
 	int N;
 	in>>N;
@@ -44,5 +43,11 @@ void BubbleList::Getpoint()
 		p=new BUBBLE;
 	}
 	end->next=NULL;
+
+}
+
+void BubbleList::AddPoint()
+{
+	
 
 }

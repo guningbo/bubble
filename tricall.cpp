@@ -168,20 +168,28 @@ void DynamicBubble(triangulateio &in,triangulateio &mid,REAL *Velocity)
 			if(IsStable(xi,yi,ri,xj,yj,rj))
 			{
 				flag=a[i][j];
-			//	Velocity[2*flag]=0;
-			//	Velocity[2*flag+1]=0;
+				REAL v_x=(0.1*Velocity[2*i]+0.1*Velocity[2*flag])/0.2;
+				REAL v_y=(0.1*Velocity[2*i+1]+0.1*Velocity[2*flag+1])/0.2;
+				Velocity[2*flag]=v_x;
+				Velocity[2*flag+1]=v_y;
+				Velocity[2*i]=v_x;
+				Velocity[2*i+1]=v_y;
+				fx-=2*GetGravitationX(xi,yi,xj,yj,0.1,0.1);
+				fy-=2*GetGravitationY(xi,yi,xj,yj,0.1,0.1);
 			}
 			// fx=fx+GetSpring(xi,xj,Lij);
 			// fy=fy+GetSpring(yi,yj,Lij);	
+			
 			fx+=GetGravitationX(xi,yi,xj,yj,0.1,0.1);
 			fy+=GetGravitationY(xi,yi,xj,yj,0.1,0.1);
+
 		}
 	if (flag!=-1)
 		{
-			fx=0;
-			fy=0;
-			Velocity[2*i]=0;
-			Velocity[2*i+1]=0;
+	//		fx=0;
+	//		fy=0;
+	//		Velocity[2*i]=0;
+	//		Velocity[2*i+1]=0;
 			
 		}
 		
@@ -191,8 +199,8 @@ void DynamicBubble(triangulateio &in,triangulateio &mid,REAL *Velocity)
 		REAL sy=Velocity[2*i+1]*Pertime+(1/2.0)*accY*pow(Pertime,2.0);
 		in.pointlist[2*i]=in.pointlist[2*i]+sx;
 		in.pointlist[2*i+1]=in.pointlist[2*i+1]+sy;
-		Velocity[2*i]=Velocity[2*i]+accX*Pertime;
-		Velocity[2*i+1]=Velocity[2*i+1]+accY*Pertime;
+		Velocity[2*i]=(Velocity[2*i]+accX*Pertime)*1;
+		Velocity[2*i+1]=(Velocity[2*i+1]+accY*Pertime)*1;
 		
 
 	}
