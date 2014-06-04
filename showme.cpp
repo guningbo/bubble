@@ -12,7 +12,9 @@ GLsizei  winWindth=700,winHeigh=700;
 triangulateio in;
 triangulateio mid;
 triangulateio vorout;
-REAL Velocity[1000]={0};
+BubbleList bub;
+REAL Velocity[1000];
+REAL Mass[1000];
 void init(void)
 {
 	glClearColor(0.0,0.0,0.0,1.0);
@@ -42,12 +44,36 @@ void winReshapeFcn(int newWidth,int newHeigh)
 
 void timeCircle(int num)
 {
-	DynamicBubble(in,mid,Velocity);
+	DynamicBubble(in,mid,Velocity,bub,Mass);
 	initOV(mid,vorout);
 	triangulate("pczAevn", &in, &mid, &vorout);	
 	glutPostRedisplay();
 	glutTimerFunc(50,timeCircle,1);
 }
+void timeAddPoint(int num)
+{  BUBBLE* p=new BUBBLE;
+	p=bub.GetHead();
+	int i=0;
+	while(p->next!=NULL){
+		p=p->next;
+	p->Velocity[0]=Velocity[2*i];
+	p->Velocity[1]=Velocity[2*i+1];
+	p->pointX=in.pointlist[2*i];
+	p->pointY=in.pointlist[2*i+1];
+	i++;
+	
+	}
+	bub.AddPoint();
+	//bub.popPoint();
+free(in.pointlist);
+free(in.pointattributelist);
+free(in.pointmarkerlist);
+free(in.regionlist);
+initIn(in,bub,Velocity,Mass);
+glutTimerFunc(2000,timeAddPoint,1);
+}
+
+
 void DrawGLTCL()
 {	glClear(GL_COLOR_BUFFER_BIT);
 	glColor3f(1.0f,0.0f,1.0f);
@@ -61,7 +87,7 @@ void DrawGLTCL()
 		glVertex2f(hx+R*cos(2*Pi/1000*i), hy+R*sin(2*Pi/1000*i));
 	glEnd();
 	}
-	glColor3f(0.4f,0.0f,0.0f);
+/*	glColor3f(0.4f,0.0f,0.0f);
 	for(int i=0;i<mid.numberoftriangles;i++)
 	{
 		GLdouble hx, hy, mx, my,ex,ey;
@@ -82,22 +108,6 @@ void DrawGLTCL()
 		glEnd();
 	
 	}	
-	/*
-	glColor3f(1.0f,1.0f,0.0f);
-	for(int i=0;i<mid.numberofsegments;i++)
-	{
-		REAL hx,hy;
-		REAL ex,ey;
-		hx=mid.pointlist[mid.segmentlist[2*i]];
-		hy=mid.pointlist[mid.segmentlist[2*i]+1];
-		ex=mid.pointlist[mid.segmentlist[2*i+1]];
-		ey=mid.pointlist[mid.segmentlist[2*i+1]+1];
-		glBegin(GL_LINES);
-		glVertex2f(hx,hy);
-		glVertex2f(ex,ey);
-		glEnd();
-	}
-	*/
 	glColor3f(0.0f,0.4f,0.3f);
 	
 	for(int i=0;i<vorout.numberofedges;i++)
@@ -121,7 +131,7 @@ void DrawGLTCL()
 		glVertex2f(ex,ey);
 		glEnd();
 	}
-	
+	*/
 	glFlush();
 
 }
@@ -133,14 +143,15 @@ void main(int argc,char** argv)
 	glutInitWindowSize(winWindth,winHeigh);
 	glutCreateWindow("bo");
 	init();
-	BubbleList bub;
 	bub.Bubblelist();
 	bub.Getpoint();
-	initIn(in,bub);
+	initIn(in,bub,Velocity,Mass);
 	initOV(mid,vorout);
 	triangulate("pczAevn", &in, &mid, &vorout);	
 	glutDisplayFunc(DrawGLTCL);
 	glutReshapeFunc(winReshapeFcn);
 	glutTimerFunc(50,timeCircle,0);
+	glutTimerFunc(2000,timeAddPoint,0);
+
 	glutMainLoop();
 }

@@ -1,7 +1,7 @@
 
 #include "tricall.h"
 
-void initIn(triangulateio &in,BubbleList p)
+void initIn(triangulateio &in,BubbleList p,REAL *Velocity,REAL *Mass)
 {
 	in.numberofpoints=p.ListSize();
 
@@ -18,7 +18,10 @@ void initIn(triangulateio &in,BubbleList p)
 	{
 		in.pointlist[i*2]=q->pointX;
 		in.pointlist[i*2+1]=q->pointY;
-		in.pointattributelist[i]=q->Attribute;
+		in.pointattributelist[i*in.numberofpointattributes]=q->Attribute;
+		Velocity[2*i]=q->Velocity[0];
+		Velocity[2*i+1]=q->Velocity[1];
+		Mass[i]=q->Mass;
 		q=q->next;
 	}
 	in.numberofsegments = 0;
@@ -136,7 +139,7 @@ REAL GetGravitationY(REAL ax,REAL ay,REAL ex,REAL ey,REAL ma,REAL me)
 	return fy;
 
 }
-void DynamicBubble(triangulateio &in,triangulateio &mid,REAL *Velocity)
+void DynamicBubble(triangulateio &in,triangulateio &mid,REAL *Velocity,BubbleList bub,REAL* Mass)
 {
 	int a[100][50]={{0}};
 	for(int i=0;i<mid.numberoftriangles;i++)
@@ -148,7 +151,6 @@ void DynamicBubble(triangulateio &in,triangulateio &mid,REAL *Velocity)
 		AddPoint(a[mid.trianglelist[3*i+2]],mid.trianglelist[3*i]);
 		AddPoint(a[mid.trianglelist[3*i+2]],mid.trianglelist[3*i+1]);
 	}
-	
 	for(int i=0;i<mid.numberofpoints;i++)
 	{	int flag=-1;
 		REAL fx=0,fy=0;
@@ -157,9 +159,8 @@ void DynamicBubble(triangulateio &in,triangulateio &mid,REAL *Velocity)
 		yi=mid.pointlist[2*i+1];
 		ri=mid.pointattributelist[i];
 		for(int j=1;j<=a[i][0];j++)
-	//	for(int j=0;j<mid.numberofpoints;j++)
 		{
-		//	if(j==i)continue;
+	
 			REAL xj,yj,rj;
 			 xj=mid.pointlist[2*a[i][j]];
 			 yj=mid.pointlist[2*a[i][j]+1];
@@ -168,43 +169,32 @@ void DynamicBubble(triangulateio &in,triangulateio &mid,REAL *Velocity)
 			if(IsStable(xi,yi,ri,xj,yj,rj))
 			{
 				flag=a[i][j];
-				REAL v_x=(0.1*Velocity[2*i]+0.1*Velocity[2*flag])/0.2;
-				REAL v_y=(0.1*Velocity[2*i+1]+0.1*Velocity[2*flag+1])/0.2;
+				REAL v_x=(Mass[i]*Velocity[2*i]+Mass[flag]*Velocity[2*flag])/(Mass[i]+Mass[flag]);
+				REAL v_y=(Mass[i]*Velocity[2*i+1]+Mass[flag]*Velocity[2*flag+1])/(Mass[i]+Mass[flag]);
 				Velocity[2*flag]=v_x;
 				Velocity[2*flag+1]=v_y;
 				Velocity[2*i]=v_x;
 				Velocity[2*i+1]=v_y;
-				fx-=2*GetGravitationX(xi,yi,xj,yj,0.1,0.1);
-				fy-=2*GetGravitationY(xi,yi,xj,yj,0.1,0.1);
+				fx-=2*GetGravitationX(xi,yi,xj,yj,Mass[i],Mass[flag]);
+				fy-=2*GetGravitationY(xi,yi,xj,yj,Mass[i],Mass[flag]);
 			}
-			// fx=fx+GetSpring(xi,xj,Lij);
-			// fy=fy+GetSpring(yi,yj,Lij);	
 			
-			fx+=GetGravitationX(xi,yi,xj,yj,0.1,0.1);
-			fy+=GetGravitationY(xi,yi,xj,yj,0.1,0.1);
-
-		}
-	if (flag!=-1)
-		{
-	//		fx=0;
-	//		fy=0;
-	//		Velocity[2*i]=0;
-	//		Velocity[2*i+1]=0;
-			
+			else{
+			fx+=GetGravitationX(xi,yi,xj,yj,Mass[i],Mass[a[i][j]]);
+			fy+=GetGravitationY(xi,yi,xj,yj,Mass[i],Mass[a[i][j]]);
+			}
 		}
 		
-		REAL accX=fx/0.1;
-		REAL accY=fy/0.1;
+		REAL accX=fx/Mass[i];
+		REAL accY=fy/Mass[i];
 		REAL sx=Velocity[2*i]*Pertime+(1/2.0)*accX*pow(Pertime,2.0);
 		REAL sy=Velocity[2*i+1]*Pertime+(1/2.0)*accY*pow(Pertime,2.0);
 		in.pointlist[2*i]=in.pointlist[2*i]+sx;
 		in.pointlist[2*i+1]=in.pointlist[2*i+1]+sy;
 		Velocity[2*i]=(Velocity[2*i]+accX*Pertime)*1;
 		Velocity[2*i+1]=(Velocity[2*i+1]+accY*Pertime)*1;
-		
 
 	}
 }
-
 
 

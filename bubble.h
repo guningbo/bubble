@@ -3,6 +3,7 @@
 #define _BUBBLE_H
 
 #include<iostream>
+#include <time.h>
 #define REAL double
 using namespace std;
 
@@ -12,6 +13,9 @@ typedef struct BUBBLE
 	REAL pointX;
 	REAL pointY;
 	REAL Attribute;
+	REAL Velocity[2];
+	REAL Mass;
+	time_t time;
     struct BUBBLE *next;
 }BUBBlE;
 
@@ -31,9 +35,10 @@ public:
 	void Getpoint();
 	void getpoint();
 	void AddPoint();
-	
+	void popPoint();
 };
 
-
+REAL randompoint();
+REAL randomattr();
 
 #endif
