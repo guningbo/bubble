@@ -54,7 +54,10 @@ void BubbleList::Getpoint()
 
 void BubbleList::AddPoint()
 {
+	
+	for(int i=0;i<rand()%2+1;i++){
 	BUBBlE *p=new BUBBlE;
+	p->num=end->num+1;
 	p->pointX=randompoint();
 	p->pointY=randompoint();
 	p->Attribute=randomattr();
@@ -64,6 +67,7 @@ void BubbleList::AddPoint()
 	p->Velocity[1]=0.0;
 	end->next=p;
 	end=p;
+	}
 	end->next=NULL;
 	
 }
@@ -82,16 +86,17 @@ REAL randomattr()
 	REAL point=(rand()%4+2)/100.0;
 	return point;
 }
+
 void BubbleList::popPoint()
 {
-	BUBBlE* p=new BUBBlE;
-	BUBBlE* q=new BUBBlE;
+	BUBBlE* p;
+	BUBBlE* q;
 		p=q=head;
 	BUBBlE* r=head;
 	REAL t;
 	time_t t1;
 	p=p->next;
-	while(p!=NULL)
+	while(p->next!=NULL)
 	{
 	time(&t1);
 	 
@@ -99,12 +104,13 @@ void BubbleList::popPoint()
 	 t=-1*PopSpeed*t*p->Attribute;
 	 t=pow(2.71828,t);
 	 t=1-t;
-	 REAL temp=(rand()%1000+200)/10000.0;
+	 REAL temp=(rand()%900+100)/1000.0;
 	 if(temp<t)
 	 {
+		
 		q->next=p->next;
 		r=p;
-		p=p->next;
+		p=q->next;
 		free(r);
 	 }
 	 else
@@ -112,5 +118,20 @@ void BubbleList::popPoint()
 		q=p;
 		p=p->next;
 	 }
+
+	}
+}
+
+
+void BubbleList::popPoint2()
+{
+	BUBBlE* p;
+	BUBBlE* q;
+	p=q=head;
+	if(ListSize()>5)
+	{
+	p=q->next;
+	q->next=p->next;
+	free(p);
 	}
 }

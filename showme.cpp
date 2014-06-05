@@ -13,8 +13,8 @@ triangulateio in;
 triangulateio mid;
 triangulateio vorout;
 BubbleList bub;
-REAL Velocity[1000];
-REAL Mass[1000];
+REAL Velocity[2000]={0};
+REAL Mass[1000]={0};
 void init(void)
 {
 	glClearColor(0.0,0.0,0.0,1.0);
@@ -54,22 +54,48 @@ void timeAddPoint(int num)
 {  BUBBLE* p=new BUBBLE;
 	p=bub.GetHead();
 	int i=0;
-	while(p->next!=NULL){
-		p=p->next;
+	p=p->next;
+	while(p!=NULL){
+		
 	p->Velocity[0]=Velocity[2*i];
 	p->Velocity[1]=Velocity[2*i+1];
 	p->pointX=in.pointlist[2*i];
 	p->pointY=in.pointlist[2*i+1];
 	i++;
-	
-	}
+	p=p->next;
+	}	
+	bub.popPoint();
 	bub.AddPoint();
-	//bub.popPoint();
 free(in.pointlist);
 free(in.pointattributelist);
 free(in.pointmarkerlist);
 free(in.regionlist);
+free(in.trianglelist);
+free(in.triangleattributelist);
+free(in.neighborlist);
+free(in.segmentlist);
+free(in.segmentmarkerlist);
+free(in.edgelist);
+free(in.edgemarkerlist);
+free(mid.pointlist);
+free(mid.pointattributelist);
+free(mid.pointmarkerlist);
+free(mid.trianglelist);
+free(mid.triangleattributelist);
+free(mid.trianglearealist);
+free(mid.neighborlist);
+free(mid.segmentlist);
+free(mid.segmentmarkerlist);
+free(mid.edgelist);
+free(mid.edgemarkerlist);
+free(vorout.pointlist);
+free(vorout.pointattributelist);
+free(vorout.edgelist);
+free(vorout.normlist);
+
 initIn(in,bub,Velocity,Mass);
+initOV(mid,vorout);
+triangulate("pczAevn", &in, &mid, &vorout);
 glutTimerFunc(2000,timeAddPoint,1);
 }
 
@@ -150,8 +176,9 @@ void main(int argc,char** argv)
 	triangulate("pczAevn", &in, &mid, &vorout);	
 	glutDisplayFunc(DrawGLTCL);
 	glutReshapeFunc(winReshapeFcn);
-	glutTimerFunc(50,timeCircle,0);
 	glutTimerFunc(2000,timeAddPoint,0);
+	glutTimerFunc(50,timeCircle,0);
+
 
 	glutMainLoop();
 }

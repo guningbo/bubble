@@ -100,9 +100,7 @@ REAL GetSlope(REAL ax,REAL ay,REAL ex,REAL ey)//获取斜角度
 int IsStable(REAL ax,REAL ay,REAL ra,REAL ex,REAL ey,REAL re)
 {
 	if((GetDistance(ax,ay,ex,ey)-GetPlateauEqual(ra,re))<0.001/*&&(GetDistance(ax,ay,ex,ey)-GetPlateauEqual(ra,re))>-0.01*/)
-	{ cout<<GetDistance(ax,ay,ex,ey)-GetPlateauEqual(ra,re)<<endl;
-		cout<<GetDistance(ax,ay,ex,ey)<<endl;
-		cout<<GetPlateauEqual(ra,re)<<endl;
+	{ 
 		return 1;
 	}
 	else return 0;
@@ -141,7 +139,7 @@ REAL GetGravitationY(REAL ax,REAL ay,REAL ex,REAL ey,REAL ma,REAL me)
 }
 void DynamicBubble(triangulateio &in,triangulateio &mid,REAL *Velocity,BubbleList bub,REAL* Mass)
 {
-	int a[100][50]={{0}};
+	int a[500][50]={{0}};
 	for(int i=0;i<mid.numberoftriangles;i++)
 	{
 		AddPoint(a[mid.trianglelist[3*i]],mid.trianglelist[3*i+1]);
@@ -166,7 +164,7 @@ void DynamicBubble(triangulateio &in,triangulateio &mid,REAL *Velocity,BubbleLis
 			 yj=mid.pointlist[2*a[i][j]+1];
 			 rj=mid.pointattributelist[a[i][j]];
 			 REAL Lij=GetPlateauEqual(ri,rj);
-			if(IsStable(xi,yi,ri,xj,yj,rj))
+			if(IsStable(xi,yi,ri,xj,yj,rj))        //如果存在达到平衡状态的气泡，则使用动量守恒定律使两个气泡以相同的速度移动
 			{
 				flag=a[i][j];
 				REAL v_x=(Mass[i]*Velocity[2*i]+Mass[flag]*Velocity[2*flag])/(Mass[i]+Mass[flag]);
@@ -175,8 +173,14 @@ void DynamicBubble(triangulateio &in,triangulateio &mid,REAL *Velocity,BubbleLis
 				Velocity[2*flag+1]=v_y;
 				Velocity[2*i]=v_x;
 				Velocity[2*i+1]=v_y;
+				if(GetDistance(xi,yi,xj,yj)<0.01){
+					fx-=0.1*GetGravitationX(xi,yi,xj,yj,Mass[i],Mass[flag]);
+					fy-=0.1*GetGravitationY(xi,yi,xj,yj,Mass[i],Mass[flag]);
+				}
+				else{
 				fx-=2*GetGravitationX(xi,yi,xj,yj,Mass[i],Mass[flag]);
 				fy-=2*GetGravitationY(xi,yi,xj,yj,Mass[i],Mass[flag]);
+				}
 			}
 			
 			else{

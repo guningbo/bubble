@@ -36,6 +36,7 @@ public:
 	void getpoint();
 	void AddPoint();
 	void popPoint();
+	void popPoint2();
 };
 
 REAL randompoint();
