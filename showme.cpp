@@ -176,7 +176,7 @@ void main(int argc,char** argv)
 	triangulate("pczAevn", &in, &mid, &vorout);	
 	glutDisplayFunc(DrawGLTCL);
 	glutReshapeFunc(winReshapeFcn);
-	glutTimerFunc(2000,timeAddPoint,0);
+	glutTimerFunc(1000,timeAddPoint,0);
 	glutTimerFunc(50,timeCircle,0);
 
 

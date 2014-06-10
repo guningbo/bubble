@@ -1,6 +1,6 @@
 #include "bubble.h"
 #include <fstream> 
-#define PopSpeed 0.07
+#define PopSpeed 0.1
 void BubbleList::Bubblelist()
 {
 	head=new BUBBlE;
@@ -55,7 +55,7 @@ void BubbleList::Getpoint()
 void BubbleList::AddPoint()
 {
 	
-	for(int i=0;i<rand()%2+1;i++){
+	for(int i=0;i<rand()%4+1;i++){
 	BUBBlE *p=new BUBBlE;
 	p->num=end->num+1;
 	p->pointX=randompoint();
@@ -74,9 +74,9 @@ void BubbleList::AddPoint()
 REAL randompoint()
 {
 	
-	 REAL point=(rand()%100)/100.0;
-	 if(point<0.5)point-=0.8;
-	 if(point>0.9)point-=0.4;
+	 REAL point=(rand()%80)/100.0;
+	 if(rand()%2==0)point=-1*point;
+
 	 return point;
 }
 
